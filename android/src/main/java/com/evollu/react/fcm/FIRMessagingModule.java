@@ -6,6 +6,9 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ContentResolver;
+import android.media.AudioAttributes;
+import android.net.Uri;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
@@ -118,6 +121,13 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             if(details.hasKey("description")){
                 channel.setDescription(details.getString("description"));
             }
+
+            AudioAttributes attributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build();
+
+            Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://com.cuenative/raw/notification");
+            channel.setSound(sound, attributes);
             mngr.createNotificationChannel(channel);
         }
         promise.resolve(null);
